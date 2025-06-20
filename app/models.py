@@ -4,6 +4,11 @@ from datetime import date
 from typing import List
 
 
+class Telefono(BaseModel):
+    codigo_area: int
+    nro_telefono: int
+    tipo: str
+
 class ProveedorCreate(BaseModel):
     id_proveedor: int
     CUIT_proveedor: str
@@ -12,6 +17,7 @@ class ProveedorCreate(BaseModel):
     direccion: str
     activo: int = Field(ge=0, le=1)  # 0 o 1
     habilitado: int = Field(ge=0, le=1)  # 0 o 1
+    telefonos: List[Telefono]
 
 
 class ProveedorUpdate(BaseModel):
@@ -21,6 +27,7 @@ class ProveedorUpdate(BaseModel):
     direccion: Optional[str] = None
     activo: Optional[int] = None
     habilitado: Optional[int] = None
+    telefonos: List[Telefono] = None
 
 class ProductoCreate(BaseModel):
     id_producto: int
