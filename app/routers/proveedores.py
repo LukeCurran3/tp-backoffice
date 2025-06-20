@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from ..models import ProveedorCreate
+from ..models import ProveedorCreate, ProveedorUpdate
 from ..services.mongo_queries import *
 
 router = APIRouter()
@@ -39,8 +39,45 @@ def proveedores_con_orden():
 def proveedores_cantidad_ordenes():
     return get_proveedores_cantidad_ordenes()
 
-@router.post("/proveedores")
+
+
+#Listar los datos de todas las órdenes que hayan sido pedidas al proveedor cuyo CUIT es
+# 30-66060817-5. -> MONGO join
+@router.get("/proveedor-por-cuit/{cuit}")
+def get_proveedor_por_cuit(cuit: int):
+    return buscar_proveedor_por_cuit(cuit)
+
+@router.get("/ordenes-por-proveedor/{cuit}")
+def get_ordenes_por_proveedor(cuit: int):
+    return buscar_ordenes_por_proveedor(cuit)
+
+#Se necesita crear una vista que devuelva los datos de las órdenes de pedido
+# ordenadas por fecha (incluyendo la razón social del proveedor y el total de la orden
+# sin y con IVA).
+@router.get("/proveedores-por-fecha")
+def proveedores_por_fecha():
+    return get_proveedores_por_fecha()
+
+# proveedores activos que están inhabilitados
+@router.get("/proveedores-activos-inhabilitados")
+def proveedores_activos_inhabilitados():
+    return get_proveedores_activos_inhabilitados()
+
+
+
+# 13. Implementar la funcionalidad que permita crear nuevos proveedores, eliminar y
+# modificar los ya existentes.
+
+@router.post("/")
 def crear_proveedor(proveedor: ProveedorCreate):
     post_proveedor(proveedor)
     return {"msg": "Proveedor creado con éxito"}
 
+@router.put("/{id_proveedor}")
+def modificar_proveedor(id_proveedor: int, proveedor: ProveedorUpdate):
+    put_proveedor(id_proveedor, proveedor)
+    return {"msg": "Proveedor modificado con éxito"}
+@router.delete("/{id_proveedor}")
+def eliminar_proveedor(id_proveedor: int):
+    delete_proveedor(id_proveedor)
+    return {"msg": "Proveedor eliminado con éxito"}

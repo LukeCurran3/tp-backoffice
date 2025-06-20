@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import Optional
+from datetime import date
+from typing import List
 
 
 class ProveedorCreate(BaseModel):
@@ -19,3 +21,34 @@ class ProveedorUpdate(BaseModel):
     direccion: Optional[str] = None
     activo: Optional[int] = None
     habilitado: Optional[int] = None
+
+class ProductoCreate(BaseModel):
+    id_producto: int
+    descripcion: str
+    marca: str
+    categoria: str
+    precio: float
+    stock_actual: int
+    stock_futuro: int
+
+
+class ProductoUpdate(BaseModel):
+    descripcion: Optional[str] = None
+    marca: Optional[str] = None
+    categoria: Optional[str] = None
+    precio: Optional[float] = None
+    stock_actual: Optional[int] = None
+    stock_futuro: Optional[int] = None
+
+class DetalleOrden(BaseModel):
+    id_producto: int
+    nro_item: int
+    cantidad: float
+
+class OrdenCreate(BaseModel):
+    id_pedido: int
+    id_proveedor: int
+    fecha: date
+    total_sin_iva: float
+    iva: float
+    items: List[DetalleOrden]
