@@ -22,13 +22,12 @@ services:
     environment:
       NEO4J_AUTH: "neo4j/epicpassword123"  # default user/password neo4j/test
     volumes:
-      - ./data:/import:ro       # mounting CSVs here for import (Neo4j default import dir can be /import)
       - neo4j_data:/data       # Neo4j database persistence
     healthcheck:
       test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "epicpassword123", "RETURN 1"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 15
 
   loader:
     build: .
