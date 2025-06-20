@@ -13,11 +13,12 @@ Base de Datos II: TP Backoffice
 ## Lenguajes Usados y Justificación
 
 ### MongoDB
- Usamos Mongo para las querys de datos estructurados y para las preguantas que requisen ejecutar agregaciones de totales y conteos sin joins complejos, con capacidad de escalar horizontalmente para grandes volúmenes. También nos permitió contar órdenes y generar “vistas” ordenadas por fecha
+Usamos Mongo para las querys de datos estructurados y para las preguntas que requieran ejecutar agregaciones de totales y conteos sin joins complejos, con capacidad de escalar horizontalmente para grandes volúmenes. También nos permitió contar órdenes y generar “vistas” ordenadas por fecha, destacándose por su alto rendimiento en operaciones CRUD para inserciones, lecturas, y actualizaciones rápidas.
 
 ### Neo4j
 
-Lo elegimos para todas las consultas se tratan de tareas que en una base de datos relacional requerirían múltiples joins y subconsultas. En Neo4j se reducen a patrones MATCH muy sencillos y eficientes y nos permitio hacer operaciones CRUD sobre nodos y relaciones 
+Lo elegimos para todas las consultas que se tratan de tareas que en una base de datos relacional requerirían múltiples joins y subconsultas. En Neo4j se reducen a patrones MATCH muy sencillos para recorrer niveles de relaciones mucho más eficientemente que Mongo o JOINS en SQL. Neo4j tiene el mejor rendimiento en ciertos casos pero también provee las mejores herramientas visuales del mercado.
+
 
 
 ---
