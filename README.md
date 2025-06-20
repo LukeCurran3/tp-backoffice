@@ -1,9 +1,14 @@
 # tp-backoffice
-Base de Datos II: TP Backoffice por Ian Dalton, Nicolas Tordomar, y Luke Curran
+Base de Datos II: TP Backoffice
+
+## Integrantes
+- Ian Dalton
+- Nicolas Tordomar
+- Luke Curran
 
 ---
 
-## Lenguajes Usados
+## Lenguajes Usados y Justificación
 
 ### MongoDB
  Usamos Mongo para las querys de datos estructurados y para las preguantas que requisen ejecutar agregaciones de totales y conteos sin joins complejos, con capacidad de escalar horizontalmente para grandes volúmenes. También nos permitió contar órdenes y generar “vistas” ordenadas por fecha
@@ -12,6 +17,32 @@ Base de Datos II: TP Backoffice por Ian Dalton, Nicolas Tordomar, y Luke Curran
 
 Lo elegimos para todas las consultas se tratan de tareas que en una base de datos relacional requerirían múltiples joins y subconsultas. En Neo4j se reducen a patrones MATCH muy sencillos y eficientes y nos permitio hacer operaciones CRUD sobre nodos y relaciones 
 
+
+---
+
+## Pasos para Ejecutar el Proyecto
+
+### Abrí en Codespace
+1. En Github, abrí el proyecto directamente en Codespaces
+
+2. Leventar los contenedores con
+   ```js
+   docker-compose up -d
+   ```
+   Esto va a leventar los servicios de MongoDB y Neo4j
+   
+4. Corré el archivo llamado "populate.ipynb". Este carga y importa todas las bases de datos y convierte las columnas a un formato que podemos usar para contestar las consultas.
+
+5. En la terminal de Codespaces, ejecutá
+    ```js
+    uvicorn app.main:app --reload
+     ```
+parado en el directorio donde esta app (no adentro de el).
+
+6. Probá los endpoints que corresponden a las consultas 1 a 15.
+
+
+
 # Consultas
 ## MONGO
 
@@ -19,6 +50,7 @@ Lo elegimos para todas las consultas se tratan de tareas que en una base de dato
 ```js
 db.proveedores.find({activos:1,habilitados:1})
 ```
+
 
 2. Obtener el/los teléfono/s y el código del/los proveedor/es que contengan la palabra “Tecnología” en su razón social. -> MONGO
 ```js
@@ -336,8 +368,44 @@ RETURN o, p
 
 ```
 
-# Set-up
+# Resultados
+1. Obtener los datos de los proveedores activos y habilitados junto con sus teléfonos.
 
-docker-compose up -d
+2. Obtener el/los teléfono/s y el código del/los proveedor/es que contengan la palabra
+“Tecnología” en su razón social.
 
-Correr todos los bloques de test.ipynb
+3. Mostrar cada teléfono junto con los datos del proveedor.
+
+4. Obtener todos los proveedores que tengan registrada al menos una orden de pedido.
+
+5. Identificar todos los proveedores que NO tengan registrada ninguna orden de pedido.
+Es importante conocer su estado (¿el proveedor está activo?, ¿está habilitado?)
+
+6. Devolver todos los proveedores, con la cantidad de ordenes que tienen registradas y el
+monto total pedido, con y sin IVA incluido (si no tienen órdenes registradas considerar
+cantidad y monto en 0).
+
+7. Listar los datos de todas las órdenes que hayan sido pedidas al proveedor cuyo CUIT es
+30-66060817-5.
+
+8. Mostrar los productos que han sido pedido al menos 1 vez.
+
+9. Listar los datos de todas las órdenes de pedido que contengan productos de la marca
+“COTO”.
+
+10. Se necesita crear una vista que devuelva los datos de las órdenes de pedido ordenadas
+por fecha (incluyendo la razón social del proveedor y el total de la orden sin y con IVA).
+
+11. Crear una vista que devuelva todos los productos que aún NO han sido pedidos.
+
+12. Crear una vista que devuelva los datos de los proveedores activos que están
+inhabilitados.
+
+13. Implementar la funcionalidad que permita crear nuevos proveedores, eliminar y
+modificar los ya existentes.
+
+14. Implementar la funcionalidad que permita crear nuevos productos y modificar los ya
+existentes.
+
+15. Implementar la funcionalidad que permita registrar nuevas órdenes de pedido a los
+proveedores si corresponde
