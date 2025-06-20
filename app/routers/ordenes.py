@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from ..models import ProveedorCreate, OrdenCreate
+from ..services import neo_queries, mongo_queries
 from ..services.mongo_queries import *
 from ..services.neo_queries import *
 
@@ -26,5 +27,6 @@ def ordenes_por_fecha():
 
 @router.post("/")
 def crear_orden(orden: OrdenCreate):
-    post_orden(orden)
+    neo_queries.create_orden(orden)
+    mongo_queries.create_orden(orden)
     return {"msg": "orden registrada con éxito"}

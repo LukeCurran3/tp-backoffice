@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from ..models import ProveedorCreate, ProveedorUpdate
+from ..services import neo_queries, mongo_queries
 from ..services.mongo_queries import *
 from ..services.neo_queries import *
 
@@ -65,14 +66,17 @@ def proveedores_activos_inhabilitados():
 
 @router.post("/")
 def crear_proveedor(proveedor: ProveedorCreate):
-    post_proveedor(proveedor)
+    mongo_queries.post_proveedor(proveedor)
+    neo_queries.create_proveedor(proveedor)
     return {"msg": "Proveedor creado con éxito"}
 
 @router.put("/{id_proveedor}")
 def modificar_proveedor(id_proveedor: int, proveedor: ProveedorUpdate):
-    put_proveedor(id_proveedor, proveedor)
+    mongo_queries.put_proveedor(id_proveedor, proveedor)
+    neo_queries.put_proveedor(id_proveedor, proveedor)
     return {"msg": "Proveedor modificado con éxito"}
 @router.delete("/{id_proveedor}")
 def eliminar_proveedor(id_proveedor: int):
-    delete_proveedor(id_proveedor)
+    mongo_queries.delete_proveedor(id_proveedor)
+    neo_queries.delete_proveedor(id_proveedor)
     return {"msg": "Proveedor eliminado con éxito"}

@@ -126,7 +126,7 @@ def create_producto(producto: ProductoCreate):
         record = res.single()
         return dict(record["p"]._properties) if record else None
 
-def update_producto(id_producto: int, producto: ProductoUpdate):
+def put_producto(id_producto: int, producto: ProductoUpdate):
     update_fields = {k: v for k, v in producto.model_dump().items() if v is not None}
     set_clause = ", ".join([f"p.{k} = ${k}" for k in update_fields.keys()])
     if not set_clause:
