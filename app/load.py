@@ -70,14 +70,19 @@ def replace_nans(obj):
         return obj
 
 def import_mongo():
+    mdb.proveedores.create_index([("id_proveedor", 1)], unique=True)
+    mdb.proveedores.create_index([("CUIT_proveedor", 1)], unique=True)
     mdb.proveedores.delete_many({})
     mdb.proveedores.insert_many(replace_nans(proveedores))
 
+    mdb.productos.create_index([("id_producto", 1)], unique=True)
     mdb.productos.delete_many({})
     mdb.productos.insert_many(replace_nans(df_prod.to_dict("records")))
-
+    
+    mdb.ordenes.create_index([("id_pedido", 1)], unique=True)
     mdb.ordenes.delete_many({})
     mdb.ordenes.insert_many(replace_nans(ordenes))
+
 
 import_mongo()
 
