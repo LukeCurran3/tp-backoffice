@@ -1,0 +1,90 @@
+id_producto;descripcion;marca;categoria;precio;stock_actual;stock_futuro
+1;Turrón maní;Arcor;food;443.88;404;0
+2;Talonario de recibos;Impresión;sales;192.64;854;0
+3;Anillos;Bagley;food;554.79;123;0
+4;Etiquetas;3M;supplies;48.81;39;0
+5;Regla triangular;Pizzini;scales;193.02;33;0
+6;Moneda de 10;Casa moneda;coin;835.23;236;0
+7;Rollo papel film;Pepita;packaging;184.47;869;0
+8;Entraña;COTO;meat;724.35;55;0
+9;Esponja;Mortimer;supplies;184.12;312;0
+10;Plástico tarjeta;VISA;credit card;613.74;111;0
+11;Facturas surtidas;La Argentina;bakery;794.93;73;0
+12;Barritas de surimi 500g;Kanikama;fish;943.44;40;0
+13;Compás;Pizzini;supplies;300.9;391;0
+14;Asado;COTO;meat;289.23;75;0
+15;Surtido;Bagley;food;469.83;181;0
+16;Polvo colágeno;Mizu;nutritional product;840.71;150;0
+17;Talonario de factura A;Impresión;sales;876.47;628;0
+18;Talonario de factura B;Impresión;sales;349.82;931;0
+19;Talonario de factura C;Impresión;sales;908.77;408;0
+20;Papel higiénico;La Campanita;household goods;946.39;120;0
+21;Rollo de cocina;La Campanita;household goods;342.01;110;0
+22;Lector codigo de barras portátil;Sony;barcode;667.36;23;0
+23;Manteca;COTO;groceries;460.0;8;0
+24;eu elit. Nulla;Enim Associates;;835.86;405;0
+25;Billetera hombre;Blaqué;bag;67.85;108;0
+26;Ibuprofeno 400;Bagó; drugstore ;838.23;73;0
+27;Plástico tarjeta;AMEX;credit card;391.91;239;0
+28;Paracetamol 1g;Tafirol; drugstore ;815.23;73;0
+29;Sacapuntas;Pizzini;supplies;58.44;323;0
+30;Barritas de surimi 250g;Kanikama;fish;713.17;36;0
+31;Producto 1;Marca 1;product;441.95;246;0
+32;Manteca de cacao varias;Nivea;cosmetics;926.6;203;0
+33;Aspirinas;Bagó; drugstore ;472.49;496;0
+34;Atún desmenizado con agua;Arcor;canned goods;715.37;39;0
+35;Te con ibuprofeno 400;Bagó; drugstore ;762.66;139;0
+36;Producto 2;Marca 1;product;758.82;778;0
+37;Moneda de 5;Casa moneda;coin;282.07;954;0
+38;Cartera mujer;Blaqué;bag;53.83;87;0
+39;Rosas;María;fresh flowers;493.23;6;0
+40;Calculadora científica;Casio;check-out counter;261.33;45;0
+41;Billete de 1000;Casa moneda;change;156.03;142;0
+42;Bolsas blancas finas;Pepita;packaging;96.03;446;0
+43;Tijera;Pizzini;supplies;287.84;214;0
+44;Bolsas negras;Pepita;packaging;560.95;92;0
+45;Cuaderno 100 hojas;Rivadavia;check-out counter;749.66;392;0
+46;Heladera 50l;Gafa;fridge;22418.23;130;0
+47;Post-its;3M;supplies;68.12;960;0
+48;producto pc;Arcu Morbi PC;aisle;238.07;158;0
+49;Oreo bañadas chocolate;Oreo;food;2453.92;393;0
+50;Plástico tarjeta;Mastercard;credit card;113.98;359;0
+51;Escoba;Virulana;household goods;567.19;34;0
+52;Freezer de pie;Gafa;freezer;22420.78;49;0
+53;Queso crema;Finlandia;groceries;235.83;5;0
+54;Chequera 50;Rivadavia;banknote;606.65;76;0
+55;Producto 3;Marca 1;product;766.96;831;0
+56;Sandwiches de miga surtidos;La Argentina;bakery;695.45;66;0
+57;Producto 4;Marca 1;product;692.28;50;0
+58;Producto 5;Marca 2;product;270.84;487;0
+59;Morcilla;COTO;meat;872.29;47;0
+60;Bolsas verdes;Pepita;packaging;206.65;405;0
+61;Pepas;La Argentina;bakery;277.03;51;0
+62;Mermelada de frutilla;Arcor;groceries;500.85;7;0
+63;Bastones de merluza;Granja del Sol;fish;794.63;100;0
+64;Riñon;COTO;meat;773.89;36;0
+65;Chorizo;COTO;meat;325.7;66;0
+66;Pastillas de colágeno;Mizu;nutritional product;554.45;568;0
+67;Manzana roja;Green Life;fruit;197.1;300;0
+68;Producto 6;Marca 2;product;607.52;757;0
+69;Jazmines;María;fresh flowers;501.26;7;0
+70;Vacío;COTO;meat;658.13;86;0
+71;Crema corporal;Nivea;cosmetics;814.4;33;0
+72;Manzana verde;Green Life;fruit;801.99;250;0
+73;Rollo de virulana;Virulana;household goods;504.62;25;0
+74;Bife de chorizo;COTO;meat;302.67;33;0
+75;Grisines;Riera;groceries;187.51;13;0
+76;Oreo bañadas chocolate blanco;Oreo;food;2903.9;423;0
+77;Clips 500;3M;check-out counter;121.81;211;0
+78;Agua mineral;Villavicencio;beverages;630.96;44;0
+79;Galletitas oreo;Oreo;food;897.0;325;0
+80;Rollo de acero;Virulana;household goods;686.99;65;0
+81;Pan lactal;Bimbo;bakery;518.92;22;0
+82;Polvo magnesio;Mizu;nutritional product;1186.34;220;0
+83;Producto 7;Marca 2;product;539.18;808;0
+84;Chequera 100;Rivadavia;banknote;289.06;70;0
+85;Producto 8;Marca 2;product;706.33;992;0
+86;Claveles;María;fresh flowers;848.49;10;0
+87;Lector codigo de barras;Sony;barcode;495.94;29;0
+88;Billete de 500;Casa moneda;change;554.92;979;0
+89;Banana;Green Life;fruit;666.28;200;0
