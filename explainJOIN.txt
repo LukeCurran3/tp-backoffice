@@ -1,0 +1,116 @@
+{
+  explainVersion: '1',
+  stages: [
+    {
+      '$cursor': {
+        queryPlanner: {
+          namespace: 'backoffice.ordenes',
+          indexFilterSet: false,
+          parsedQuery: {},
+          queryHash: '5F5FC979',
+          planCacheKey: '5F5FC979',
+          maxIndexedOrSolutionsReached: false,
+          maxIndexedAndSolutionsReached: false,
+          maxScansToExplodeReached: false,
+          winningPlan: {
+            stage: 'COLLSCAN',
+            direction: 'forward'
+          },
+          rejectedPlans: []
+        },
+        executionStats: {
+          executionSuccess: true,
+          nReturned: 273,
+          executionTimeMillis: 15,
+          totalKeysExamined: 0,
+          totalDocsExamined: 273,
+          executionStages: {
+            stage: 'COLLSCAN',
+            nReturned: 273,
+            executionTimeMillisEstimate: 0,
+            works: 274,
+            advanced: 273,
+            needTime: 0,
+            needYield: 0,
+            saveState: 1,
+            restoreState: 1,
+            isEOF: 1,
+            direction: 'forward',
+            docsExamined: 273
+          }
+        }
+      },
+      nReturned: 273,
+      executionTimeMillisEstimate: 0
+    },
+    {
+      '$lookup': {
+        from: 'proveedores',
+        as: 'proveedor',
+        localField: 'id_proveedor',
+        foreignField: 'id_proveedor',
+        let: {},
+        pipeline: [
+          {
+            '$match': {
+              CUIT_proveedor: {
+                '$eq': 30660608175
+              }
+            }
+          }
+        ],
+        unwinding: {
+          preserveNullAndEmptyArrays: false
+        }
+      },
+      totalDocsExamined: 0,
+      totalKeysExamined: 0,
+      collectionScans: 0,
+      indexesUsed: [
+        'CUIT_proveedor_1'
+      ],
+      nReturned: 0,
+      executionTimeMillisEstimate: 15
+    }
+  ],
+  serverInfo: {
+    host: '021a6b62e033',
+    port: 27017,
+    version: '6.0.24',
+    gitVersion: '1b052b94a23863fd12be97aaa4e4b1d96456e5cc'
+  },
+  serverParameters: {
+    internalQueryFacetBufferSizeBytes: 104857600,
+    internalQueryFacetMaxOutputDocSizeBytes: 104857600,
+    internalLookupStageIntermediateDocumentMaxSizeBytes: 104857600,
+    internalDocumentSourceGroupMaxMemoryBytes: 104857600,
+    internalQueryMaxBlockingSortMemoryUsageBytes: 104857600,
+    internalQueryProhibitBlockingMergeOnMongoS: 0,
+    internalQueryMaxAddToSetBytes: 104857600,
+    internalDocumentSourceSetWindowFieldsMaxMemoryBytes: 104857600
+  },
+  command: {
+    aggregate: 'ordenes',
+    pipeline: [
+      {
+        '$lookup': {
+          from: 'proveedores',
+          localField: 'id_proveedor',
+          foreignField: 'id_proveedor',
+          as: 'proveedor'
+        }
+      },
+      {
+        '$unwind': '$proveedor'
+      },
+      {
+        '$match': {
+          'proveedor.CUIT_proveedor': 30660608175
+        }
+      }
+    ],
+    cursor: {},
+    '$db': 'backoffice'
+  },
+  ok: 1
+}
