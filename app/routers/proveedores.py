@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from ..models import ProveedorCreate
 from ..services.mongo_queries import *
+from ..services.neo_queries import *
 
 router = APIRouter()
 
