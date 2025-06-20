@@ -13,11 +13,11 @@ uri = os.getenv("NEO4J_URI", "bolt://neo4j:7687")
 neo = GraphDatabase.driver(uri, auth=("neo4j", os.getenv("NEO4J_PASSWORD", "secret")))
 
 def import_mongo():
-    df_prov = pd.read_csv("/workspaces/tp-backoffice/data/proveedor.csv")
-    df_tel  = pd.read_csv("/workspaces/tp-backoffice/data/telefono.csv")
-    df_prod = pd.read_csv("/workspaces/tp-backoffice/data/producto.csv")
-    df_op   = pd.read_csv("/workspaces/tp-backoffice/data/op.csv")
-    df_det  = pd.read_csv("/workspaces/tp-backoffice/data/detalle_op.csv")
+    df_prov = pd.read_csv("data/proveedor.csv",encoding="utf-8")
+    df_tel  = pd.read_csv("data/telefono.csv",encoding="utf-8")
+    df_prod = pd.read_csv("data/producto.csv",encoding="utf-8")
+    df_op   = pd.read_csv("data/op.csv",encoding="utf-8")
+    df_det  = pd.read_csv("data/detalle_op.csv",encoding="utf-8")
 
     mdb.proveedores.delete_many({})
     mdb.proveedores.insert_many(df_prov.to_dict("records"))
@@ -37,7 +37,7 @@ def import_neo4j():
     with neo.session() as sess:
         sess.run("MATCH (n) DETACH DELETE n")
         # proveedores
-        df = pd.read_csv("/workspaces/tp-backoffice/data/proveedor.csv")
+        df = pd.read_csv("data/proveedor.csv",encoding="utf-8")
         for _,r in df.iterrows():
             sess.run("""
                 CREATE (p:Proveedor {
@@ -49,7 +49,7 @@ def import_neo4j():
             """, **r.to_dict())
 
         # telefonos
-        df = pd.read_csv("/workspaces/tp-backoffice/data/telefono.csv")
+        df = pd.read_csv("data/telefono.csv",encoding="utf-8")
         for _,r in df.iterrows():
             sess.run("""
                 MATCH (p:Proveedor {cuit: $cuit})
@@ -57,7 +57,7 @@ def import_neo4j():
             """, cuit=r.cuit, telefono=r.telefono)
 
         # productos
-        df = pd.read_csv("/workspaces/tp-backoffice/data/producto.csv")
+        df = pd.read_csv("data/producto.csv",encoding="utf-8")
         for _,r in df.iterrows():
             sess.run("""
                 CREATE (:Producto {
@@ -70,8 +70,8 @@ def import_neo4j():
             """, **r.to_dict())
 
         # ordenes y detalles
-        df_op = pd.read_csv("/workspaces/tp-backoffice/data/op.csv")
-        df_det= pd.read_csv("/workspaces/tp-backoffice/data/detalle_op.csv")
+        df_op = pd.read_csv("data/op.csv",encoding="utf-8")
+        df_det= pd.read_csv("data/detalle_op.csv",encoding="utf-8")
         for _,o in df_op.iterrows():
             sess.run("""
                 CREATE (o:Orden {

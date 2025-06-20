@@ -1,4 +1,5 @@
 version: "3.8"
+
 services:
   mongo:
     image: mongo:6.0
@@ -6,15 +7,21 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ./data:/data                             # so mongoimport can see /data/*.csv
+      - ./data:/data/import:ro   # mounting CSVs for import; official mongo tools import from /data/import
+      - mongo_data:/data/db     # mongo data persistence
 
   neo4j:
     image: neo4j:5
     container_name: backoffice-neo4j
     ports:
-      - "7474:7474"    # HTTP
-      - "7687:7687"    # Bolt
+      - "7474:7474"   # HTTP Browser UI
+      - "7687:7687"   # Bolt protocol
     environment:
-      NEO4J_AUTH: "neo4j/YourPassword"
+      NEO4J_AUTH: "neo4j/test"  # default user/password neo4j/test
     volumes:
-      - ./data:/var/lib/neo4j/import             # Neo4j LOAD CSV looks here
+      - ./data:/import:ro       # mounting CSVs here for import (Neo4j default import dir can be /import)
+      - neo4j_data:/data       # Neo4j database persistence
+
+volumes:
+  mongo_data:
+  neo4j_data:

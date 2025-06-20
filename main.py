@@ -1,5 +1,4 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from pymongo import MongoClient
-import redis
-import json
+from load_files.load import  import_mongo, import_neo4j
+
+import_mongo()
+import_neo4j()
