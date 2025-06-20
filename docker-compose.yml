@@ -17,7 +17,7 @@ services:
       - "7474:7474"   # HTTP Browser UI
       - "7687:7687"   # Bolt protocol
     environment:
-      NEO4J_AUTH: "neo4j/test"  # default user/password neo4j/test
+      NEO4J_AUTH: "neo4j/epicpassword123"  # default user/password neo4j/test
     volumes:
       - ./data:/import:ro       # mounting CSVs here for import (Neo4j default import dir can be /import)
       - neo4j_data:/data       # Neo4j database persistence
