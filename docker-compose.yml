@@ -2,16 +2,19 @@ version: "3.8"
 
 services:
   mongo:
-    image: mongo:6.0
+    image: mongo:latest
     container_name: backoffice-mongo
     ports:
       - "27017:27017"
     volumes:
-      - ./data:/data/import:ro   # mounting CSVs for import; official mongo tools import from /data/import
       - mongo_data:/data/db     # mongo data persistence
-
+    healthcheck:
+      test: ["CMD", "bash", "-c", "echo > /dev/tcp/localhost/27017"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   neo4j:
-    image: neo4j:5
+    image: neo4j:latest
     container_name: backoffice-neo4j
     ports:
       - "7474:7474"   # HTTP Browser UI
@@ -21,7 +24,27 @@ services:
     volumes:
       - ./data:/import:ro       # mounting CSVs here for import (Neo4j default import dir can be /import)
       - neo4j_data:/data       # Neo4j database persistence
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "epicpassword123", "RETURN 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
+  loader:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      mongo:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+    command: ["python", "app/load.py"]
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=epicpassword123
 volumes:
   mongo_data:
   neo4j_data:
