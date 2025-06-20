@@ -4,6 +4,7 @@ from ..models import ProveedorCreate, OrdenCreate
 from ..services import neo_queries, mongo_queries
 from ..services.mongo_queries import *
 from ..services.neo_queries import *
+from fastapi import Response, status
 
 router = APIRouter()
 
@@ -27,6 +28,11 @@ def ordenes_por_fecha():
 
 @router.post("/")
 def crear_orden(orden: OrdenCreate):
-    neo_queries.create_orden(orden)
-    mongo_queries.create_orden(orden)
-    return {"msg": "orden registrada con éxito"}
+    object_neo = neo_queries.create_orden(orden)
+    object_mongo = mongo_queries.create_orden(orden)
+    if object_neo is None or object_mongo == 0:
+        return {"msg": "No se ha podido crear la orden"}
+    return Response(
+        content="Orden creada correctamente",
+        status_code=status.HTTP_201_CREATED
+    )

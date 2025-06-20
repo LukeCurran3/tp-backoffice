@@ -25,33 +25,39 @@ def get_proveedores_activos_habilitados():
 
 
 def post_proveedor(proveedor: ProveedorCreate):
-    db.proveedores.insert_one(proveedor.model_dump())
+    result = db.proveedores.insert_one(proveedor.model_dump())
+    return 1 if result.acknowledged else 0
 
 
 def create_orden(orden: OrdenCreate):
-    db.orden.insert_one(orden.model_dump())
+    result = db.orden.insert_one(orden.model_dump())
+    return 1 if result.acknowledged else 0
 
 
 def create_producto(producto: ProductoCreate):
-    db.producto.insert_one(producto.model_dump())
+    result = db.producto.insert_one(producto.model_dump())
+    return 1 if result.acknowledged else 0
 
 
 def put_producto(id_producto: int, producto: ProductoUpdate):
-    db.producto.update_one(
+    result = db.producto.update_one(
         {"id_producto": id_producto},  # criterio de búsqueda
         {"$set": producto.model_dump(exclude_unset=True)}
     )
+    return result.modified_count
 
 
 def put_proveedor(id_proveedor: int, proveedor: ProveedorUpdate):
-    db.proveedores.update_one(
+    result = db.proveedores.update_one(
         {"id_proveedor": id_proveedor},  # criterio de búsqueda
         {"$set": proveedor.model_dump(exclude_unset=True)}
     )
+    return result.modified_count
 
 
 def delete_proveedor(id_proveedor: int):
-    db.proveedores.delete_one({"id_proveedor": id_proveedor})
+    result = db.proveedores.delete_one({"id_proveedor": id_proveedor})
+    return result.deleted_count
 
 
 def get_telefonos_tecnologia():

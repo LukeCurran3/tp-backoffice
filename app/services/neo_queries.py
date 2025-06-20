@@ -83,12 +83,12 @@ def delete_proveedor(id_proveedor: int):
             """
             MATCH (p:Proveedor {id_proveedor: $id_proveedor})
             DETACH DELETE p
-            RETURN $id_proveedor AS id_proveedor
+            RETURN count(p) AS eliminados
             """,
             id_proveedor=id_proveedor
         )
         record = res.single()
-        return dict(record) if record else None
+        return record["eliminados"] if record else 0
 
 def put_proveedor(id_proveedor: int, proveedor: ProveedorUpdate):
     update_fields = {k: v for k, v in proveedor.dict().items() if v is not None}
