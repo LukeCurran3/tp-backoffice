@@ -31,13 +31,18 @@ Lo elegimos para todas las consultas se tratan de tareas que en una base de dato
    ```
    Esto va a leventar los servicios de MongoDB y Neo4j
    
-4. Corré el archivo llamado "populate.ipynb". Este carga y importa todas las bases de datos y convierte las columnas a un formato que podemos usar para contestar las consultas.
+4. Corré el archivo llamado "populate.ipynb" con "Run All. Este carga y importa todas las bases de datos y convierte las columnas a un formato que podemos usar para contestar las consultas. Si te pide cargar una fuente de kernel, descarga la version de python recomendada y elegí esa para ejucatar el codigo.
 
 5. En la terminal de Codespaces, ejecutá
     ```js
-    uvicorn app.main:app --reload
+    python -m uvicorn app.main:app --reload
      ```
-parado en el directorio donde esta app (no adentro de el).
+parado en el directorio donde esta app (no adentro de el). Este va a leventar FastAPI, la api que elejimos por su velocidad y rendimiento. 
+
+6. Ahora la app debe estar y podes chequear que todo esta cargado bien con
+   ```js
+   curl http://localhost:8000/proveedores/activos-habilitados
+   ```
 
 6. Probá los endpoints que corresponden a las consultas 1 a 15.
 
