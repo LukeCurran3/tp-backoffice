@@ -10,3 +10,10 @@ Usamos Mongo para las querys de datos esctructurados incluyendo proveedores, pro
 
 ### Neo4j
 
+
+
+# Set-up
+
+docker-compose up -d
+
+Correr todos los bloques de test.ipynb
