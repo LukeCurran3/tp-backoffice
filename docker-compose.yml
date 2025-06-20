@@ -4,8 +4,6 @@ services:
   mongo:
     image: mongo:latest
     container_name: backoffice-mongo
-    ports:
-      - "27017:27017"
     volumes:
       - mongo_data:/data/db     # mongo data persistence
     healthcheck:
@@ -16,9 +14,6 @@ services:
   neo4j:
     image: neo4j:latest
     container_name: backoffice-neo4j
-    ports:
-      - "7474:7474"   # HTTP Browser UI
-      - "7687:7687"   # Bolt protocol
     environment:
       NEO4J_AUTH: "neo4j/epicpassword123"  # default user/password neo4j/test
     volumes:
