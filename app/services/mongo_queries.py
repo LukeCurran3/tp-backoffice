@@ -35,12 +35,12 @@ def create_orden(orden: OrdenCreate):
 
 
 def create_producto(producto: ProductoCreate):
-    result = db.producto.insert_one(producto.model_dump())
+    result = db.productos.insert_one(producto.model_dump())
     return 1 if result.acknowledged else 0
 
 
 def put_producto(id_producto: int, producto: ProductoUpdate):
-    result = db.producto.update_one(
+    result = db.productos.update_one(
         {"id_producto": id_producto},  # criterio de búsqueda
         {"$set": producto.model_dump(exclude_unset=True)}
     )
@@ -63,13 +63,21 @@ def delete_proveedor(id_proveedor: int):
 def get_telefonos_tecnologia():
     return list(db.proveedores.find({
         "razon_social": {"$regex": "Tecnología"}
-    }, {"_id": 0, "id_proveedor": 1, "razon_social": 1, "telefonos": 1}))
+    }, {"_id": 0, "id_proveedor": 1, "telefonos": 1}))
 
 
 def get_telefonos():
-    return list(db.proveedores.find({
-    },
-        {"_id": 0, "id_proveedor": 1, "razon_social": 1, "telefonos": 1}))
+    return list(db.proveedores.aggregate([
+        {"$unwind": "$telefonos"},
+        {"$project": {
+            "_id": 0,
+            "id_proveedor": 1,
+            "razon_social": 1,
+            "codigo_area": "$telefonos.codigo_area",
+            "nro_telefono": "$telefonos.nro_telefono",
+            "tipo": "$telefonos.tipo"
+        }}
+    ]))
 
 
 def get_proveedores_cantidad_ordenes():
