@@ -1,4 +1,6 @@
-from ..database.mongo_client import db,client
+import datetime
+
+from ..database.mongo_client import db
 from ..models import ProveedorCreate, ProveedorUpdate, OrdenCreate, ProductoCreate, ProductoUpdate
 import math
 
@@ -30,7 +32,12 @@ def post_proveedor(proveedor: ProveedorCreate):
 
 
 def create_orden(orden: OrdenCreate):
-    result = db.orden.insert_one(orden.model_dump())
+    doc = orden.model_dump()
+    if isinstance(doc.get('fecha'), datetime.date) and not isinstance(doc.get('fecha'), datetime.datetime):
+        doc['fecha'] = datetime.datetime.combine(doc['fecha'], datetime.time.min)
+
+    result = db.ordenes.insert_one(doc)
+
     return 1 if result.acknowledged else 0
 
 
@@ -57,6 +64,16 @@ def put_proveedor(id_proveedor: int, proveedor: ProveedorUpdate):
 
 def delete_proveedor(id_proveedor: int):
     result = db.proveedores.delete_one({"id_proveedor": id_proveedor})
+    return result.deleted_count
+
+
+def delete_producto(id_producto: int):
+    result = db.proveedores.delete_one({"id_producto": id_producto})
+    return result.deleted_count
+
+
+def delete_order(id_pedido: int):
+    result = db.ordenes.delete_one({"id_pedido": id_pedido})
     return result.deleted_count
 
 

@@ -20,9 +20,14 @@ def productos_no_pedidos():
 
 @router.post("/")
 def crear_producto(producto: ProductoCreate):
-    object_neo = neo_queries.create_producto(producto)
     object_mongo = mongo_queries.create_producto(producto)
-    if object_neo is None or object_mongo == 0:
+    object_neo = None
+    if object_mongo != 0:
+        object_neo = neo_queries.create_producto(producto)
+
+    if object_neo is None:
+        if object_mongo != 0:
+            mongo_queries.delete_producto(producto.id_producto)
         return {"msg": "No se ha podido crear el producto"}
     return Response(
         content="Producto creado correctamente",
@@ -30,9 +35,13 @@ def crear_producto(producto: ProductoCreate):
     )
 @router.put("/{id_producto}")
 def modificar_producto(id_producto: int, producto: ProductoUpdate):
-    object_neo = neo_queries.put_producto(id_producto, producto)
     object_mongo = mongo_queries.put_producto(id_producto,  producto)
-    if object_neo is None or object_mongo == 0:
+    object_neo = None
+    if object_mongo != 0:
+        object_neo = neo_queries.put_producto(id_producto, producto)
+    if object_neo is None:
+        if object_mongo != 0:
+            mongo_queries.delete_producto(id_producto)
         return Response(
             content="Producto no encontrado",
             status_code=status.HTTP_404_NOT_FOUND

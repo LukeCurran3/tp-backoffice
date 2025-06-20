@@ -28,9 +28,14 @@ def ordenes_por_fecha():
 
 @router.post("/")
 def crear_orden(orden: OrdenCreate):
-    object_neo = neo_queries.create_orden(orden)
     object_mongo = mongo_queries.create_orden(orden)
-    if object_neo is None or object_mongo == 0:
+    object_neo = None
+    if object_mongo != 0:
+        object_neo = neo_queries.create_orden(orden)
+
+    if object_neo is None:
+        if object_mongo != 0:
+            mongo_queries.delete_order(orden.id_pedido)
         return {"msg": "No se ha podido crear la orden"}
     return Response(
         content="Orden creada correctamente",
