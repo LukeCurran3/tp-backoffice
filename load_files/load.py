@@ -14,6 +14,7 @@ neo = GraphDatabase.driver(uri, auth=("neo4j", os.getenv("NEO4J_PASSWORD", "secr
 
 def import_mongo():
     df_prov = pd.read_csv("data/proveedor.csv",encoding="utf-8")
+    df_prov["CUIT_proveedor"] = df_prov["CUIT_proveedor"].astype(str)
     df_tel  = pd.read_csv("data/telefono.csv",encoding="utf-8")
     df_prod = pd.read_csv("data/producto.csv",encoding="utf-8")
     df_op   = pd.read_csv("data/op.csv",encoding="utf-8")

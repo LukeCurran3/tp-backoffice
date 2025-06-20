@@ -42,22 +42,16 @@ def proveedores_cantidad_ordenes():
 
 
 
-#Listar los datos de todas las órdenes que hayan sido pedidas al proveedor cuyo CUIT es
-# 30-66060817-5. -> MONGO join
-@router.get("/proveedor-por-cuit/{cuit}")
-def get_proveedor_por_cuit(cuit: int):
-    return buscar_proveedor_por_cuit(cuit)
 
-@router.get("/ordenes-por-proveedor/{cuit}")
-def get_ordenes_por_proveedor(cuit: int):
-    return buscar_ordenes_por_proveedor(cuit)
 
 #Se necesita crear una vista que devuelva los datos de las órdenes de pedido
 # ordenadas por fecha (incluyendo la razón social del proveedor y el total de la orden
 # sin y con IVA).
 @router.get("/proveedores-por-fecha")
 def proveedores_por_fecha():
-    return get_proveedores_por_fecha()
+    res = get_proveedores_por_fecha()
+    print(res)
+    return res
 
 # proveedores activos que están inhabilitados
 @router.get("/proveedores-activos-inhabilitados")

@@ -2,19 +2,19 @@
 from fastapi import APIRouter
 
 from ..models import ProductoUpdate, ProductoCreate
-from ..services.mongo_queries import *
+from ..services.neo_queries import *
 
 router = APIRouter()
 
 # Mostrar los productos que han sido pedido al menos 1 vez.
 @router.get("/productos-pedidos")
 def productos_pedidos():
-    return get_productos_pedidos()
+    return get_productos_con_orden()
 
 # Crear una vista que devuelva todos los productos que aún NO han sido pedidos.
 @router.get("/productos-no-pedidos")
 def productos_no_pedidos():
-    return get_productos_no_pedidos()
+    return get_productos_sin_orden()
 
 @router.post("/")
 def crear_producto(producto: ProductoCreate):

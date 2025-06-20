@@ -1,50 +1,101 @@
 from ..database.mongo_client import db
 from ..models import ProveedorCreate
+import math
+
+
+def clean_nans(obj):
+    
+    if isinstance(obj, float):
+        if math.isnan(obj) or math.isinf(obj):
+            return None
+        return obj
+    elif isinstance(obj, dict):
+        return {k: clean_nans(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [clean_nans(x) for x in obj]
+    else:
+        return obj
 
 
 def get_proveedores_activos_habilitados():
-    return list(db.proveedores.find({
+    result = list(db.proveedores.find({
         "activo": 1,
         "habilitado": 1
-    }, {"_id": 0, "activo": 1}))
+    }, {"_id": 0}))
+    return clean_nans(result)
 
 def post_proveedor(proveedor:ProveedorCreate):
-    db.proveedores.insert_one(proveedor.dict())
+    db.proveedores.insert_one(proveedor.model_dump())
 
 
 
 def get_telefonos_tecnologia():
     return list(db.proveedores.find({
          "razon_social": {"$regex": "Tecnología"}
-     }, {"_id": 0, "id_proveedor": 1, "telefono": 1}))
+     }, {"_id": 0,"id_proveedor":1,"razon_social":1,"telefonos":1}))
 
-def get_telefonos()():
+def get_telefonos():
     return list(db.proveedores.find({
     },
-    {"_id": 0}))
+    {"_id": 0,"id_proveedor":1,"razon_social":1,"telefonos":1}))
 
-def get_proveedores_cantidad_ordenes()():
-    return list(db.ordenes.aggregate([
-        {"$unwind": "$items"},
+def get_proveedores_cantidad_ordenes():
+    return list(db.proveedores.aggregate([
+        {
+            "$lookup": {
+                "from": "ordenes",
+                "localField": "id_proveedor",
+                "foreignField": "id_proveedor",
+                "as": "ordenes"
+            }
+        },
+        {
+            "$unwind": {
+                "path": "$ordenes",
+                "preserveNullAndEmptyArrays": True
+            }
+        },
+        {
+            "$unwind": {
+                "path": "$ordenes.items",
+                "preserveNullAndEmptyArrays": True
+            }
+        },
         {
             "$lookup": {
                 "from": "productos",
-                "localField": "items.id_producto",
+                "localField": "ordenes.items.id_producto",
                 "foreignField": "id_producto",
                 "as": "producto_info"
             }
         },
-        {"$unwind": "$producto_info"},
+        {
+            "$unwind": {
+                "path": "$producto_info",
+                "preserveNullAndEmptyArrays": True
+            }
+        },
         {
             "$addFields": {
                 "subtotal_item": {
-                    "$multiply": ["$producto_info.precio", "$items.cantidad"]
-                }
+                    "$cond": [
+                        {"$and": [
+                            {"$ifNull": ["$producto_info.precio", False]},
+                            {"$ifNull": ["$ordenes.items.cantidad", False]}
+                        ]},
+                        {"$multiply": ["$producto_info.precio", "$ordenes.items.cantidad"]},
+                        0
+                    ]
+                },
+                "iva": {"$ifNull": ["$ordenes.iva", 0]}
             }
         },
         {
             "$group": {
-                "_id": "$_id",
+                "_id": {
+                    "id_proveedor": "$id_proveedor",
+                    "id_orden": "$ordenes._id"
+                },
                 "id_proveedor": {"$first": "$id_proveedor"},
                 "total_sin_iva": {"$sum": "$subtotal_item"},
                 "iva": {"$first": "$iva"}
@@ -63,7 +114,15 @@ def get_proveedores_cantidad_ordenes()():
         {
             "$group": {
                 "_id": "$id_proveedor",
-                "cantidad_ordenes": {"$sum": 1},
+                "cantidad_ordenes": {
+                    "$sum": {
+                        "$cond": [
+                            {"$gt": ["$total_sin_iva", 0]},
+                            1,
+                            0
+                        ]
+                    }
+                },
                 "monto_total_sin_iva": {"$sum": "$total_sin_iva"},
                 "monto_total_con_iva": {"$sum": "$total_con_iva"}
             }
@@ -76,20 +135,20 @@ def get_proveedores_cantidad_ordenes()():
                 "monto_total_con_iva": 1,
                 "_id": 0
             }
-        }
+        },
+        {"$sort": {"id_proveedor": 1}}
     ]))
 def crear_indices():
     db.proveedores.create_index({"CUIT_proveedor": 1})
     db.ordenes.create_index({"id_proveedor": 1})
 def buscar_proveedor_por_cuit():
     return list(db.proveedores.find(
-        {"CUIT_proveedor": 30660608175}, 
+        {"CUIT_proveedor": "30660608175"}, 
         {"_id": 0}))
-def buscar_ordenes_por_proveedor():
+def buscar_ordenes_por_proveedor(cuit):
     return list(db.ordenes.find(
-        {"id_proveedor": 30660608175},
+        {"id_proveedor": str(cuit)},
         {"_id": 0}))
-
 def get_proveedores_por_fecha():
     return list(db.ordenes.aggregate([
         {
@@ -111,6 +170,12 @@ def get_proveedores_por_fecha():
             }
         },
         { "$unwind": "$proveedor" },
+        # Convert proveedor._id to string
+        {
+            "$addFields": {
+                "proveedor._id": { "$toString": "$proveedor._id" }
+            }
+        },
         { "$unwind": "$items" },
         {
             "$lookup": {
@@ -121,6 +186,12 @@ def get_proveedores_por_fecha():
             }
         },
         { "$unwind": "$producto" },
+        # Convert producto._id to string
+        {
+            "$addFields": {
+                "producto._id": { "$toString": "$producto._id" }
+            }
+        },
         {
             "$addFields": {
                 "item": {
@@ -139,7 +210,7 @@ def get_proveedores_por_fecha():
         {
             "$group": {
                 "_id": "$_id",
-                "id_pedido": { "$first": "$_id" },
+                "id_pedido": { "$first": { "$toString": "$_id" } },
                 "fecha_pedido": { "$first": "$fecha" },
                 "fecha_iso": { "$first": "$fecha_iso" },
                 "total_sin_iva": { "$sum": "$subtotal_item" },
@@ -182,4 +253,4 @@ def get_proveedores_activos_inhabilitados():
     return list(db.proveedores.find({
         "activo": 1,
         "habilitado": 0
-    }, {"_id": 0, "activo": 1}))
+    }, {"_id": 0}))
