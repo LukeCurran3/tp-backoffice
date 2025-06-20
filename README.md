@@ -113,6 +113,97 @@ db.ordenes.find({ id_proveedor:  }) (arriba)
 10. Se necesita crear una vista que devuelva los datos de las órdenes de pedido ordenadas
 por fecha (incluyendo la razón social del proveedor y el total de la orden sin y con IVA). -> MONGO
 ```js
+db.ordenes.aggregate([
+  // Convertimos la fecha a formato ordenable
+  {
+    $addFields: {
+      fecha_iso: {
+        $dateFromString: {
+          dateString: "$fecha",
+          format: "%d/%m/%Y"
+        }
+      }
+    }
+  },
+  // Traemos datos del proveedor
+  {
+    $lookup: {
+      from: "proveedores",
+      localField: "id_proveedor",
+      foreignField: "id_proveedor",
+      as: "proveedor"
+    }
+  },
+  { $unwind: "$proveedor" },
+  // Descomponemos items para buscar productos
+  { $unwind: "$items" },
+  // Traemos datos del producto por cada item
+  {
+    $lookup: {
+      from: "productos",
+      localField: "items.id_producto",
+      foreignField: "id_producto",
+      as: "producto"
+    }
+  },
+  { $unwind: "$producto" },
+  // Reestructuramos el item con el producto embebido
+  {
+    $addFields: {
+      item: {
+        cantidad: "$items.cantidad",
+        producto: "$producto"
+      }
+    }
+  },
+  {
+    $addFields: {
+      subtotal_item: { $multiply: ["$producto.precio", "$items.cantidad"] },
+    }
+  },
+  // Agrupamos por orden nuevamente, reconstruyendo items
+  {
+    $group: {
+      _id: "$_id",
+      id_pedido: { $first: "$_id" },
+      fecha_pedido: { $first: "$fecha" },
+      fecha_iso: { $first: "$fecha_iso" },
+      total_sin_iva: { $sum: "$subtotal_item" },
+      iva: { $first: "$iva" },
+      proveedor: { $first: "$proveedor" },
+      items: { $push: "$item" }
+    }
+  },
+  // Calculamos total con IVA
+  {
+    $addFields: {
+      total_con_iva: {
+        $round: [
+          { $multiply: ["$total_sin_iva", { $add: [1, { $divide: ["$iva", 100] }] }] },
+          2
+        ]
+      }
+    }
+  },
+  // Formato final del documento
+  {
+    $project: {
+      _id: 0,
+      proveedor: "$proveedor",
+      total_sin_iva: 1,
+      total_con_iva: 1,
+      fecha_pedido: 1,
+      id_pedido: 1,
+      items: 1
+    }
+  },
+  // Ordenamos por fecha
+  {
+    $sort: { fecha_iso: 1 }
+  }
+])
+
+
 ```
 
 12. Crear una vista que devuelva los datos de los proveedores activos que están
