@@ -296,7 +296,30 @@ SET p.nombre = $nombre,
     p.marca = $marca,
     p.precio = $precio
 RETURN p
+```
 
+```js
+
+db.productos.insertOne({
+  id_producto: 101,
+  descripcion: "Galletitas de avena",
+  marca: "Bagley",
+  categoria: "alimentos",
+  precio: 350.00,
+  stock_actual: 100,
+  stock_futuro: 0
+})
+
+
+db.productos.updateOne(
+  { id_producto: 101 }, // Filtro
+  {
+    $set: {
+      precio: 399.99,
+      stock_actual: 120
+    }
+  }
+)
 ```
 15. Implementar la funcionalidad que permita registrar nuevas órdenes de pedido a los
 proveedores si corresponde. -> AMBOS
