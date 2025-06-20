@@ -1,19 +1,30 @@
-version: '3.8'
+
 services:
   mongo:
-    image: mongo:5.0
+    image: mongo:6
     ports:
       - "27017:27017"
     volumes:
-      - mongo_data:/data/db
+      - ./data:/data
 
   neo4j:
-    image: neo4j:5.3
-    ports:
-      - "7474:7474"    # HTTP UI
-      - "7687:7687"    # Bolt
+    image: neo4j:5
     environment:
-      NEO4J_AUTH: "neo4j/YourPassword"
+      - NEO4J_AUTH=neo4j/secret
+    ports:
+      - "7687:7687"
+      - "7474:7474"
+    volumes:
+      - neo4j_data:/data
+
+  app:
+    build: .
+    depends_on:
+      - mongo
+      - neo4j
+    volumes:
+      - .:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
 
 volumes:
-  mongo_data:
+  neo4j_data:
