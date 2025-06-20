@@ -47,15 +47,6 @@ def get_ordenes_por_marca(brand):
         ordenes_json = [dict(record) for record in res]
         return ordenes_json
 
-def get_productos_sin_orden():
-    with driver.session() as sess:
-        res = sess.run("""
-                MATCH (p:Producto)
-                WHERE NOT (p)<-[:REALIZA_PEDIDO]-(:Orden)
-                RETURN p.codigo, p.nombre, p.marca, p.precio
-        """)
-        productos_json = [dict(record) for record in res]
-        return productos_json
 
 def create_proveedor(proveedor: ProveedorCreate):
     with driver.session() as sess:

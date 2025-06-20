@@ -1,4 +1,4 @@
-from ..database.mongo_client import db
+from ..database.mongo_client import db,client
 from ..models import ProveedorCreate, ProveedorUpdate, OrdenCreate, ProductoCreate, ProductoUpdate
 import math
 
@@ -181,10 +181,6 @@ def get_proveedores_cantidad_ordenes():
     ]))
 
 
-def crear_indices():
-    db.proveedores.create_index({"CUIT_proveedor": 1})
-    db.ordenes.create_index({"id_proveedor": 1})
-
 
 def buscar_proveedor_por_cuit():
     provider_info = db.proveedores.find(
@@ -203,109 +199,11 @@ def buscar_ordenes_por_proveedor(cuit):
 
 
 def get_proveedores_por_fecha():
-    return list(db.ordenes.aggregate([
-        {
-            "$addFields": {
-                "fecha_iso": {
-                    "$dateFromString": {
-                        "dateString": "$fecha",
-                        "format": "%d/%m/%Y"
-                    }
-                }
-            }
-        },
-        {
-            "$lookup": {
-                "from": "proveedores",
-                "localField": "id_proveedor",
-                "foreignField": "id_proveedor",
-                "as": "proveedor"
-            }
-        },
-        {"$unwind": "$proveedor"},
-        # Convert proveedor._id to string
-        {
-            "$addFields": {
-                "proveedor._id": {"$toString": "$proveedor._id"}
-            }
-        },
-        {"$unwind": "$items"},
-        {
-            "$lookup": {
-                "from": "productos",
-                "localField": "items.id_producto",
-                "foreignField": "id_producto",
-                "as": "producto"
-            }
-        },
-        {"$unwind": "$producto"},
-        # Convert producto._id to string
-        {
-            "$addFields": {
-                "producto._id": {"$toString": "$producto._id"}
-            }
-        },
-        {
-            "$addFields": {
-                "item": {
-                    "cantidad": "$items.cantidad",
-                    "producto": "$producto"
-                }
-            }
-        },
-        {
-            "$addFields": {
-                "subtotal_item": {
-                    "$multiply": ["$producto.precio", "$items.cantidad"]
-                }
-            }
-        },
-        {
-            "$group": {
-                "_id": "$_id",
-                "id_pedido": {"$first": {"$toString": "$_id"}},
-                "fecha_pedido": {"$first": "$fecha"},
-                "fecha_iso": {"$first": "$fecha_iso"},
-                "total_sin_iva": {"$sum": "$subtotal_item"},
-                "iva": {"$first": "$iva"},
-                "proveedor": {"$first": "$proveedor"},
-                "items": {"$push": "$item"}
-            }
-        },
-        {
-            "$addFields": {
-                "total_con_iva": {
-                    "$round": [
-                        {
-                            "$multiply": [
-                                "$total_sin_iva",
-                                {"$add": [1, {"$divide": ["$iva", 100]}]}
-                            ]
-                        },
-                        2
-                    ]
-                }
-            }
-        },
-        {
-            "$project": {
-                "_id": 0,
-                "proveedor": 1,
-                "total_sin_iva": 1,
-                "total_con_iva": 1,
-                "fecha_pedido": 1,
-                "id_pedido": 1,
-                "items": 1
-            }
-        },
-        {
-            "$sort": {"fecha_iso": 1}
-        }
-    ]))
+    return db["view_proveedores_por_fecha"].find().to_list()
 
 
 def get_proveedores_activos_inhabilitados():
-    return list(db.proveedores.find({
-        "activo": 1,
-        "habilitado": 0
-    }, {"_id": 0}))
+    return db["view_proveedores_activos_inhabilitados"].find().to_list()
+
+def get_productos_sin_orden():
+    return db["view_productos_no_pedidos"].find().to_list()

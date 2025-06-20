@@ -3,8 +3,8 @@ from fastapi import Response, status
 
 from ..models import ProveedorCreate, ProveedorUpdate
 from ..services import neo_queries, mongo_queries
-from ..services.mongo_queries import *
-from ..services.neo_queries import *
+
+
 
 router = APIRouter()
 
@@ -12,32 +12,32 @@ router = APIRouter()
 # Obtener los datos de los proveedores activos y habilitados junto con sus teléfonos.
 @router.get("/activos-habilitados")
 def proveedores_activos():
-    return get_proveedores_activos_habilitados()
+    return mongo_queries.get_proveedores_activos_habilitados()
 
 
 # Obtener el/los teléfono/s y el código del/los proveedor/es que contengan la palabra
 # “Tecnología” en su razón social.
 @router.get("/telefonos-tecnologia")
 def telefonos_tecnologia():
-    return get_telefonos_tecnologia()
+    return mongo_queries.get_telefonos_tecnologia()
 
 
 # Mostrar cada teléfono junto con los datos del proveedor.
 @router.get("/telefonos")
 def telefonos():
-    return get_telefonos()
+    return mongo_queries.get_telefonos()
 
 
 # Obtener todos los proveedores que tengan registrada al menos una orden de pedido.
 @router.get("/proveedores-con-orden")  # usa neo
 def proveedores_con_orden():
-    return get_proveedores_con_orden()
+    return neo_queries.get_proveedores_con_orden()
 
 
 # Identificar todos los proveedores que NO tengan registrada ninguna orden de pedido.
 @router.get("/proveedores-sin-orden")
 def proveedores_con_orden():
-    return get_proveedores_sin_orden()
+    return neo_queries.get_proveedores_sin_orden()
 
 
 # Devolver todos los proveedores, con la cantidad de ordenes que tienen registradas y el
@@ -45,7 +45,7 @@ def proveedores_con_orden():
 # cantidad y monto en 0).
 @router.get("/proveedores-cantidad-ordenes")
 def proveedores_cantidad_ordenes():
-    return get_proveedores_cantidad_ordenes()
+    return mongo_queries.get_proveedores_cantidad_ordenes()
 
 
 # Se necesita crear una vista que devuelva los datos de las órdenes de pedido
@@ -53,7 +53,7 @@ def proveedores_cantidad_ordenes():
 # sin y con IVA).
 @router.get("/proveedores-por-fecha")
 def proveedores_por_fecha():
-    res = get_proveedores_por_fecha()
+    res = mongo_queries.get_proveedores_por_fecha()
     print(res)
     return res
 
@@ -61,7 +61,7 @@ def proveedores_por_fecha():
 # proveedores activos que están inhabilitados
 @router.get("/proveedores-activos-inhabilitados")
 def proveedores_activos_inhabilitados():
-    return get_proveedores_activos_inhabilitados()
+    return mongo_queries.get_proveedores_activos_inhabilitados()
 
 
 # 13. Implementar la funcionalidad que permita crear nuevos proveedores, eliminar y
