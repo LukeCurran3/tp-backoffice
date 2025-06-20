@@ -25,29 +25,20 @@ Lo elegimos para todas las consultas que se tratan de tareas que en una base de 
 
 ## Pasos para Ejecutar el Proyecto
 
-### Abrí en Codespace
-1. En Github, abrí el proyecto directamente en Codespaces
+### Codespace
+1. En Github, abrí el proyecto directamente en Codespaces con clic en "Code" y seleccionando "Open with Codespaces".
 
 2. Leventar los contenedores con
    ```js
    docker-compose up -d
    ```
-   Esto va a leventar los servicios de MongoDB y Neo4j
+Esto va a leventar los contenedores de MongoDB y Neo4j y cargar la app desarollada con FastAPI automáticamente.
    
-4. Corré el archivo llamado "populate.ipynb" con "Run All. Este carga y importa todas las bases de datos y convierte las columnas a un formato que podemos usar para contestar las consultas. Si te pide cargar una fuente de kernel, descarga la version de python recomendada y elegí esa para ejucatar el codigo.
+3. Te va a avisar que puerto 8000 esta corriendo, pero los datos todavia tienen que cargar. Se generará un enlace al servidor, que puede demorar unos segundos en estar disponible. Cuando te cuente que no hay attributos, sumá "/doc" al final de la URL y recargá la pantalla.
 
-5. En la terminal de Codespaces, ejecutá
-    ```js
-    python -m uvicorn app.main:app --reload
-     ```
-parado en el directorio donde esta app (no adentro de el). Este va a leventar FastAPI, la api que elejimos por su velocidad y rendimiento. 
 
-6. Ahora la app debe estar y podes chequear que todo esta cargado bien con
-   ```js
-   curl http://localhost:8000/proveedores/activos-habilitados
-   ```
-
-6. Probá los endpoints que corresponden a las consultas 1 a 15.
+4. Ahí tendrás acceso a todas las 15 consultas que corresponden a las 15 consultas en el TP para probar y testear.
+   
 
 
 
