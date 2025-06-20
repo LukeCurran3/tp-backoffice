@@ -70,8 +70,13 @@ def proveedores_activos_inhabilitados():
 @router.post("/")
 def crear_proveedor(proveedor: ProveedorCreate):
     object_mongo = mongo_queries.post_proveedor(proveedor)
-    object_neo = neo_queries.create_proveedor(proveedor)
-    if object_neo is None or object_mongo == 0:
+    object_neo = None
+    if object_mongo != 0:
+        object_neo = neo_queries.create_proveedor(proveedor)
+
+    if object_neo is None:
+        if object_mongo != 0:
+            mongo_queries.delete_proveedor(proveedor.id_proveedor)
         return {"msg": "No se ha podido crear el proveedor"}
     return Response(
         content="Proveedor creado correctamente",
@@ -82,8 +87,12 @@ def crear_proveedor(proveedor: ProveedorCreate):
 @router.put("/{id_proveedor}")
 def modificar_proveedor(id_proveedor: int, proveedor: ProveedorUpdate):
     object_mongo = mongo_queries.put_proveedor(id_proveedor, proveedor)
-    object_neo = neo_queries.put_proveedor(id_proveedor, proveedor)
-    if object_neo is None or object_mongo == 0:
+    object_neo = None
+    if object_mongo != 0:
+        object_neo = neo_queries.put_proveedor(id_proveedor, proveedor)
+    if object_neo is None:
+        if object_mongo != 0:
+            mongo_queries.delete_proveedor(id_proveedor)
         return Response(
             content="Proveedor no encontrado",
             status_code=status.HTTP_404_NOT_FOUND
