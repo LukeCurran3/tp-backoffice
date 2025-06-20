@@ -179,9 +179,13 @@ def crear_indices():
 
 
 def buscar_proveedor_por_cuit():
-    return list(db.proveedores.find(
+    provider_info = db.proveedores.find(
         {"CUIT_proveedor": "30660608175"},
-        {"_id": 0}))
+        {"_id": 0}).to_list()[0]
+
+    order_info = db.ordenes.find({ "id_proveedor": provider_info["id_proveedor"] },{"_id":0}).to_list()
+    
+    return {"provider":provider_info,"orders":order_info}
 
 
 def buscar_ordenes_por_proveedor(cuit):
