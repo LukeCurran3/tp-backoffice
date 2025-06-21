@@ -68,7 +68,7 @@ def delete_proveedor(id_proveedor: int):
 
 
 def delete_producto(id_producto: int):
-    result = db.proveedores.delete_one({"id_producto": id_producto})
+    result = db.productos.delete_one({"id_producto": id_producto})
     return result.deleted_count
 
 

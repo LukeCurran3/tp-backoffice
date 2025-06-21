@@ -27,7 +27,6 @@ class ProveedorUpdate(BaseModel):
     direccion: Optional[str] = None
     activo: Optional[int] = None
     habilitado: Optional[int] = None
-    telefonos: List[Telefono] = None
 
 class ProductoCreate(BaseModel):
     id_producto: int
