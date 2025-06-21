@@ -12,12 +12,11 @@ Base de Datos II: TP Backoffice
 
 ## Lenguajes Usados y Justificación
 
-### MongoDB
-Usamos Mongo para las querys de datos estructurados y para las preguntas que requieran ejecutar agregaciones de totales y conteos sin joins complejos, con capacidad de escalar horizontalmente para grandes volúmenes. También nos permitió contar órdenes y generar “vistas” ordenadas por fecha, destacándose por su alto rendimiento en operaciones CRUD para inserciones, lecturas, y actualizaciones rápidas.
+Se eligieron MongoDB y Neo4j como bases de datos NoSQL para implementar la capa de persistencia del sistema.
 
-### Neo4j
+MongoDB fue utilizada para las consultas sobre datos estructurados y aquellas que requieren agregaciones simples (totales, conteos), sin necesidad de joins complejos. Su capacidad de escalar horizontalmente y su rendimiento en operaciones CRUD la convierten en una opción eficiente para manejar grandes volúmenes de información. Además, permite ordenar órdenes por fecha y generar vistas simuladas de manera flexible.
 
-Lo elegimos para todas las consultas que se tratan de tareas que en una base de datos relacional requerirían múltiples joins y subconsultas. En Neo4j se reducen a patrones MATCH muy sencillos para recorrer niveles de relaciones mucho más eficientemente que Mongo o JOINS en SQL. Neo4j tiene el mejor rendimiento en ciertos casos pero también provee las mejores herramientas visuales del mercado.
+Neo4j, por su parte, fue seleccionada para resolver consultas que implican múltiples relaciones o saltos entre entidades, que en Mongo por ejemplo implicarían múltiples joins o subconsultas anidadas. En Neo4j, estas operaciones se expresan de forma sencilla mediante patrones MATCH, optimizando el rendimiento. Es ideal para modelar y consultar relaciones como proveedores ↔ órdenes ↔ productos, facilitando la navegación del grafo con gran eficiencia.
 
 
 
@@ -34,7 +33,7 @@ Lo elegimos para todas las consultas que se tratan de tareas que en una base de 
    ```
 Esto va a leventar los contenedores de MongoDB y Neo4j y cargar la app desarollada con FastAPI automáticamente.
    
-3. Te va a avisar que puerto 8000 esta corriendo, pero los datos todavia tienen que cargar. Se generará un enlace al servidor, que puede demorar unos segundos en estar disponible. Cuando te cuente que no hay attributos, sumá "/doc" al final de la URL y recargá la pantalla.
+3. Te va a avisar que puerto 8000 esta corriendo, pero los datos todavia tienen que cargar. Se generará un enlace al servidor, que puede demorar unos segundos en estar disponible. Cuando te cuente que no hay attributos, sumá "/docs" al final de la URL y recargá la pantalla.
 
 
 4. Ahí tendrás acceso a todas las 15 consultas que corresponden a las 15 consultas en el TP para probar y testear.
@@ -236,6 +235,7 @@ db.ordenes.aggregate([
 
 
 ```
+11. Crear una vista que devuelva todos los productos que aún NO han sido pedidos. -> NEO
 
 12. Crear una vista que devuelva los datos de los proveedores activos que están
 inhabilitados. -> MONGO
@@ -272,20 +272,12 @@ RETURN DISTINCT o.id_pedido, o.fecha, o.iva, o.id_proveedor
 ORDER BY o.fecha DESC
 
 ```
-11. Crear una vista que devuelva todos los productos que aún NO han sido pedidos. -> NEO
-```cypher
-MATCH (p:Producto)
-WHERE NOT (p)<-[:REALIZA_PEDIDO]-(:Orden)
-RETURN p.codigo, p.nombre, p.marca, p.precio
-```
 
 ### RELACIONES
 - Orden tiene proveedor
 - Orden tiene (3 de este) producto
 
 ## AMBOS
-
-ACID!!!
 
 13. Implementar la funcionalidad que permita crear nuevos proveedores, eliminar y
 modificar los ya existentes. -> AMBOS ;.;
