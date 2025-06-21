@@ -219,12 +219,12 @@ mdb.command({
         {
             "$project": {
                 "_id": 0,
-                "proveedor": 1,
+                "proveedor.razon_social": 1,
+                "proveedor.id_proveedor": 1,
                 "total_sin_iva": 1,
                 "total_con_iva": 1,
                 "fecha_pedido": 1,
-                "id_pedido": 1,
-                "items": 1
+                "id_pedido": 1
             }
         },
         {
