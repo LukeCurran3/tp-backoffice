@@ -92,7 +92,7 @@ SELECT
     STRING_AGG('(' || t.codigo_area || ') ' || t.nro_telefono, ', ') AS telefonos
 FROM 
     proveedor p
-JOIN 
+LEFT OUTER JOIN
     telefono t ON p.id_proveedor = t.id_proveedor
 WHERE 
     p.activo = 1 AND p.habilitado = 1

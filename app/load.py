@@ -138,7 +138,7 @@ mdb.command({
                 "fecha_iso": {
                     "$dateFromString": {
                         "dateString": "$fecha",
-                        "format": "%d/%m/%Y"
+                        "format": "%-d/%-m/%Y"
                     }
                 }
             }
@@ -192,7 +192,7 @@ mdb.command({
         {
             "$group": {
                 "_id": "$_id",
-                "id_pedido": {"$first": {"$toString": "$_id"}},
+                "id_pedido": {"$first": {"$toString": "$id_pedido"}},
                 "fecha_pedido": {"$first": "$fecha"},
                 "fecha_iso": {"$first": "$fecha_iso"},
                 "total_sin_iva": {"$sum": "$subtotal_item"},
