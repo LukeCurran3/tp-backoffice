@@ -206,7 +206,7 @@ def buscar_proveedor_por_cuit():
 
     order_info = db.ordenes.find({ "id_proveedor": provider_info["id_proveedor"] },{"_id":0}).to_list()
     
-    return {"provider":provider_info,"orders":order_info}
+    return order_info
 
 
 def buscar_ordenes_por_proveedor(cuit):

@@ -245,7 +245,8 @@ mdb.command({
       },
       {
         "$project": {
-          "_id": 0
+          "_id": 0,
+          "telefonos": 0
         }
       }
     ]
@@ -305,6 +306,7 @@ def import_neo4j():
                      id_pedido:$id_pedido,
                      id_proveedor:$id_proveedor,
                      iva:$iva,
+                     total_sin_iva: $total_sin_iva,
                   fecha: date($fecha)
                 })
                 WITH o

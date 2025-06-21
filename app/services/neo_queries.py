@@ -1,3 +1,5 @@
+from datetime import date
+
 from ..database.neo4j_client import driver
 from ..models import ProveedorCreate, ProveedorUpdate, ProductoCreate, ProductoUpdate, OrdenCreate
 
@@ -44,7 +46,11 @@ def get_ordenes_por_marca(brand):
             """,
             brand=brand
         )
-        ordenes_json = [dict(record) for record in res]
+        ordenes_json = [
+            {k.split('.')[-1]: v.strftime("%d/%m/%Y") if k.endswith("fecha") and hasattr(v, "year") else v for k, v in
+             r.items()}
+            for r in res
+        ]
         return ordenes_json
 
 
